@@ -132,6 +132,17 @@ class MiModulo extends Module
      */
     protected function getConfigForm()
     {
+
+        $root = Category::getRootCategory();
+
+    //Generating the tree
+    $tree = new HelperTreeCategories('categories_1'); //The string in param is the ID used by the generated tree
+    $tree->setUseCheckBox(true)
+        ->setAttribute('is_category_filter', $root->id)
+        ->setRootCategory($root->id)
+        ->setSelectedCategories(array((int)Configuration::get('CATEGORY_1'))) //if you wanted to be pre-carged
+        ->setInputName('CATEGORY_1'); //Set the name of input. The option "name" of $fields_form doesn't seem to work with "categories_select" type
+    $categoryTree = $tree->render();
         
         return array(
             'form' => array(
@@ -209,17 +220,12 @@ class MiModulo extends Module
                     ),
                     ),
                     array(
-                        'type' => 'categories',
-                        'label' => $this->l('Lista de categorias'),                        
-                        'name' => 'CATEGORY_CATEGORY_TO',
-                        'tree' => [
-                            //'selected_categories' => [1,2,4,3,5,6],
-                            'disabled_categories' => null,
-                            'use_search' => false,
-                            'use_checkbox' => true,
-                            'id' => 'id_category_tree'
-                        ],
-                        
+                        'type'  => 'categories_select',
+                        'label' => $this->l('Category'),
+                        'desc' => $this->l('Select Category '),
+                        'name'  => 'CATEGORY_1', //No ho podem treure si no, no passa la variable al configuration
+                        'category_tree'  => $categoryTree, //This is the category_tree called in form.tpl
+                        'required' => true
                     ),
                     array(
                         'type' => 'color',
@@ -306,7 +312,7 @@ class MiModulo extends Module
             'active' => Configuration::get('active', null),            
             'colorSel' => Configuration::get('colorSel', null),            
             'subir_archivo' => Configuration::get('subir_archivo', null),
-            'CATEGORY_CATEGORY_TO' => Configuration::get(['CATEGORY_CATEGORY_TO["selected_categories"]'], null),
+            'CATEGORY_1' => Configuration::get('CATEGORY_1', null),
         );
     }
 
@@ -344,11 +350,9 @@ class MiModulo extends Module
 
     public function hookDisplayBanner()
     {
-        $form_values = $this->getConfigFormValues();
 
-       
-            print_r($form_values);
-       
+        print_r(Configuration::get('colorSel'));
+      
         $form_values = $this->getConfigFormValues();
         $texto = $this->l($form_values['colorSel']);
         
