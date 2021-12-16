@@ -324,7 +324,7 @@ class MiModulo extends Module
         $form_values = $this->getConfigFormValues();
 
         foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
+            Configuration::updateValue($key, Tools::getValue($key)); 
         }
     }
 
@@ -351,7 +351,7 @@ class MiModulo extends Module
     public function hookDisplayBanner()
     {
 
-        print_r(Configuration::get('colorSel'));
+        print_r(Configuration::get('CATEGORY_1'));
       
         $form_values = $this->getConfigFormValues();
         $texto = $this->l($form_values['colorSel']);
