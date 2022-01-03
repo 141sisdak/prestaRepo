@@ -360,5 +360,6 @@ class MiModulo extends Module
             "valor" => $texto
         ]);
         return $this->display(__FILE__, 'plantillaTest.tpl');
+        
     }
 }
